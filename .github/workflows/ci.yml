@@ -1,0 +1,30 @@
+name: Automation CI
+
+on:
+workflow_dispatch:    # manual trigger
+pull_request:         # setiap ada PR
+
+jobs:
+tests:
+runs-on: ubuntu-latest
+  
+
+steps:
+  - name: Checkout source
+    uses: actions/checkout@v4
+
+  - name: Setup JDK
+    uses: actions/setup-java@v4
+    with:
+      distribution: 'temurin'
+      java-version: '17'
+
+  - name: Grant execute permission to Gradle
+    run: chmod +x gradlew
+
+  - name: Run API tests
+    run: ./gradlew apiTest
+
+  - name: Run Web UI tests
+    run: ./gradlew webTest
+
