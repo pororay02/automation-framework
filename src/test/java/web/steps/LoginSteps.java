@@ -1,46 +1,44 @@
 package web.steps;
 
 import io.cucumber.java.en.*;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import web.pages.LoginPage;
-import static org.junit.jupiter.api.Assertions.*;
+import web.pages.LoginPage; // Panggil Page yang kita buat tadi
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LoginSteps {
-
-
     WebDriver driver;
     LoginPage loginPage;
 
     @Given("I open Demoblaze homepage")
-    public void open_homepage() {
+    public void openHome() {
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver();
-        loginPage = new LoginPage(driver);
-        loginPage.openHomePage();
+        driver.manage().window().maximize();
+        driver.get("https://www.demoblaze.com/");
+        loginPage = new LoginPage(driver); // Inisialisasi Page
     }
 
     @When("I click Login menu")
-    public void click_login_menu() {
-        loginPage.openLoginModal();
+    public void clickMenu() {
+        loginPage.clickLoginMenu();
     }
 
-    @When("I input username and password")
-    public void input_credential() {
-        loginPage.enterUsername("test");
-        loginPage.enterPassword("test");
+    @And("I input username and password")
+    public void inputUser() {
+        loginPage.inputCredentials("jayjay_user", "password123");
     }
 
-    @When("I click Login button")
-    public void click_button() {
-        loginPage.clickLogin();
+    @And("I click Login button")
+    public void submit() {
+        loginPage.clickSubmit();
     }
 
     @Then("I should see welcome message")
-    public void verify_login() throws InterruptedException {
-        Thread.sleep(2000);
-        assertTrue(loginPage.getWelcomeMessage().contains("test"));
+    public void verify() {
+        String msg = loginPage.getWelcomeMessage();
+        assertTrue(msg.contains("Welcome"));
         driver.quit();
     }
-
-
 }
